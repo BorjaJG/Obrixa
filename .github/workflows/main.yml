@@ -1,41 +1,29 @@
-name: 🚀 Pipeline Profesional
+name: 🚀 Android CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
-      
-      - name: 🟢 Setup Node
-        uses: actions/setup-node@v4
+
+      - name: ☕ Setup JDK
+        uses: actions/setup-java@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          distribution: temurin
+          java-version: 17
 
-      - name: 📦 Install
-        run: npm ci
+      - name: 📦 Grant execute permission
+        run: chmod +x gradlew
 
-      - name: 🏗️ Build Check
-        run: npm run build --if-present
+      - name: 🏗️ Build project
+        run: ./gradlew build
 
-      - name: 🧪 Run Tests
-        run: npm test --if-present
-
-  security-scan:
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-    steps:
-      - uses: actions/checkout@v4
-      - name: 🛡️ CodeQL Scan
-        uses: github/codeql-action/init@v3
-        with:
-          languages: 'javascript-typescript'
-      - name: Analysis
-        uses: github/codeql-action/analyze@v3
+      - name: 🧪 Run tests
+        run: ./gradlew test
