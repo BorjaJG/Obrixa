@@ -1,41 +1,26 @@
-name: 🚀 Despliegue Automático
+name: Android CI
 
 on:
   push:
-    branches: ["main"] # Se activa al subir a main
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: 📥 Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: 🟢 Configurar Node
-        uses: actions/setup-node@v4
+      - name: Setup JDK
+        uses: actions/setup-java@v4
         with:
-          node-version: '20'
+          distribution: temurin
+          java-version: 17
 
-      - name: 📦 Instalar y Construir
-        run: |
-          npm ci
-          npm run build --if-present 
-          # Nota: Si tu salida es la carpeta 'dist', asegúrate de que exista.
+      - name: Give permission to gradlew
+        run: chmod +x gradlew
 
-      - name: 📤 Subir a GitHub Pages
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # Aquí pones la carpeta donde se genera tu web (ej: dist, build o .)
-          path: './dist' 
-
-      - name: 🚀 Publicar
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Build
+        run: ./gradlew build
