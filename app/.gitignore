@@ -1,0 +1,48 @@
+/build
+# --- Android Studio & IntelliJ ---
+.idea/
+.gradle/
+build/
+*.iml
+local.properties
+.cxx/
+captures/
+.externalNativeBuild/
+.navigation/
+
+# --- Kotlin ---
+*.kotlin_module
+.kotlin/
+
+# --- Gradle ---
+.gradle/
+build/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+# --- Keystores (¡IMPORTANTE: No subas tus llaves de firma!) ---
+*.jks
+*.keystore
+*.p12
+*.properties
+!/gradle.properties
+
+# --- Log files ---
+*.log
+
+# --- Android Test & Coverage ---
+/captures/
+/screenshots/
+/build/outputs/apk/
+/build/outputs/bundle/
+/build/outputs/mapping/
+
+# --- Variables de entorno (Secretos) ---
+secrets.xml
+google-services.json
+.env
+
+# --- Archivos de sistema ---
+.DS_Store
+Thumbs.db
