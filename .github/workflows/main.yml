@@ -1,0 +1,41 @@
+name: 🚀 Pipeline Profesional
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: 🟢 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 📦 Install
+        run: npm ci
+
+      - name: 🏗️ Build Check
+        run: npm run build --if-present
+
+      - name: 🧪 Run Tests
+        run: npm test --if-present
+
+  security-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: 🛡️ CodeQL Scan
+        uses: github/codeql-action/init@v3
+        with:
+          languages: 'javascript-typescript'
+      - name: Analysis
+        uses: github/codeql-action/analyze@v3

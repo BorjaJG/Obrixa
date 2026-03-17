@@ -1,0 +1,41 @@
+name: 🚀 Despliegue Automático
+
+on:
+  push:
+    branches: ["main"] # Se activa al subir a main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🟢 Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 📦 Instalar y Construir
+        run: |
+          npm ci
+          npm run build --if-present 
+          # Nota: Si tu salida es la carpeta 'dist', asegúrate de que exista.
+
+      - name: 📤 Subir a GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Aquí pones la carpeta donde se genera tu web (ej: dist, build o .)
+          path: './dist' 
+
+      - name: 🚀 Publicar
+        id: deployment
+        uses: actions/deploy-pages@v4
